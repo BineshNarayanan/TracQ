@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="{% static 'IssueTrackingSystem/images/favicon.png' %}">
+		<title>Issue Tracker</title>
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'IssueTrackingSystem/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="{% static 'IssueTrackingSystem/custom_css/carousel.css' %}" rel="stylesheet">
+		<link href="{% static 'IssueTrackingSystem/custom_css/app.css' %}" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container menucontainer">
+			<div class="col-md-6">
+				<ul class="nav nav-pills">
+					<li><a href="/IssueTrackingSystem/home">Home</a></li>
+					<li><a href="/IssueTrackingSystem/openQueries">Open Queries</a></li>
+					<li class="active"><a href="#">Resolved Queries</a></li>
+					<li><a href="/IssueTrackingSystem/postquery">Post Query</a></li>
+				</ul>	
+			</div>
+			<div class="col-md-4" style="border:0px solid red;padding:10px;text-align:center;font-family: cursive">
+				<span style="">Welcome, {{user.first_name}}</span>	
+			</div>
+			<div class="col-md-2" style="border:0px solid red">
+				<ul class="nav nav-pills pull-right">
+					<li class="active"><a href="/IssueTrackingSystem/logout">Logout</a></li>
+				</ul>	
+			</div>
+		</div>
+		<div class="container queryform">
+			<div class="col-md-12" style="border:0px solid red;margin-bottom:8px;padding:0px;">
+				<div class="col-md-10" style="border:0px solid blue;padding:2px;">
+					<span class="label label-success" style="font-size:16px;">Resolved Queries</span>
+				</div>
+			</div>
+			<div style="border:0px solid red;clear:both">
+				{% if listIssues %}
+				<table class="table table-bordered" style="border-radius:2px;">
+					<thead>
+						<tr style="background-color:#428bca;color:white">
+							<th style="text-align:center">Id</th>
+							<th style="text-align:center">Title</th>
+							<th style="text-align:center">Posted By</th>
+							<th style="text-align:center">Posted On</th>
+							<th style="text-align:center">Resolved By</th>
+							<th style="text-align:center">Resolved On</th>
+						</tr>
+					</thead>
+					{% for Issue in listIssues %}
+					<tr>
+						<td style="text-align:center">
+							<a href="/IssueTrackingSystem/viewquery?issueId={{Issue.Id}}">{{Issue.Id}}</a>
+						</td>
+						<td>
+							{{Issue.IssueTitle}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.UserId}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.IssueRaisedOn}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.IssueResolvedBy}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.LastUpdateDate}}
+						</td>
+					</tr>
+					{% endfor %}
+				</table>	
+				{% else %}
+					<p>No Issues are available.</p>
+				 
+				{% endif %}
+			</div>
+		</div>
+		<div class="container queryform">
+			<div class="col-md-12" style="border:0px solid red;margin-bottom:8px;padding:0px;">
+				<div class="col-md-10" style="border:0px solid blue;padding:2px;">
+					<span class="label label-success" style="font-size:16px;">Resolved Queries (Posted by {{user.first_name}})</span>
+				</div>
+			</div>
+			<div style="border:0px solid red;clear:both">
+				{% if listIssuesPostedBySelf %}
+				<table class="table table-bordered" style="border-radius:2px;">
+					<thead>
+						<tr style="background-color:#428bca;color:white">
+							<th style="text-align:center">Id</th>
+							<th style="text-align:center">Title</th>
+							<th style="text-align:center">Posted By</th>
+							<th style="text-align:center">Posted On</th>
+							<th style="text-align:center">Resolved By</th>
+							<th style="text-align:center">Resolved On</th>
+						</tr>
+					</thead>
+					{% for Issue in listIssuesPostedBySelf %}
+					<tr>
+						<td style="text-align:center">
+							<a href="/IssueTrackingSystem/viewquery?issueId={{Issue.Id}}">{{Issue.Id}}</a>
+						</td>
+						<td>
+							{{Issue.IssueTitle}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.UserId}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.IssueRaisedOn}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.IssueResolvedBy}}
+						</td>
+						<td style="text-align:center">
+							{{Issue.LastUpdateDate}}
+						</td>
+					</tr>
+					{% endfor %}
+				</table>	
+				{% else %}
+					<p>No Issues are available.</p>
+				 
+				{% endif %}
+			</div>
+		</div>
+		<!-- FOOTER -->
+		<hr>
+		<div class="footer">
+			<p>&copy; 2014 Morningstar, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</div>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="{% static 'IssueTrackingSystem/dist/js/jquery.js' %}"></script>
+		<script src="{% static 'IssueTrackingSystem/dist/js/bootstrap.min.js' %}"></script>
+	</body>
+</html>

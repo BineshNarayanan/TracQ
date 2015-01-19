@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="{% static 'IssueTrackingSystem/images/favicon.png' %}">
+		<title>Issue Tracker</title>
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'IssueTrackingSystem/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="{% static 'IssueTrackingSystem/custom_css/carousel.css' %}" rel="stylesheet">
+		<link href="{% static 'IssueTrackingSystem/custom_css/app.css' %}" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<!--
+			<form id="loginForm" class="form-signin" method="post" action="/IssueTrackingSystem/login">
+				{% csrf_token %}
+				<h2 class="form-signin-heading" style="text-align:center">Login</h2>
+				<label for="inputEmail" class="sr-only">Email address</label>
+				<input type="email" id="inputEmail" name="txtEmail" class="form-control" placeholder="Email address" required autofocus>
+				<label for="inputPassword" class="sr-only">Password</label>
+				<input type="password" id="inputPassword" name="txtPassword" class="form-control" placeholder="Password" required>
+				{{errorMessage}}
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			</form>
+			-->
+			{% block content %}
+			{% if form.errors %}
+			<p>Your username and password didn't match. Please try again.</p>
+			{% endif %}
+			<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+				{% csrf_token %}
+				<!--<table>
+				{{ form }}
+				</table>
+				<input type="submit" value="login" />
+				<input type="hidden" name="next" value="/" />
+				-->
+				<table align="center" width="40%">
+					<!--
+					<tr>
+						<td>
+							<h2 class="form-signin-heading" style="text-align:center">Login</h2>
+							<label for="inputEmail" class="sr-only">Email address</label>
+							<input type="text" id="inputEmail" name="txtEmail" class="form-control" placeholder="Email address" required autofocus>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label for="inputPassword" class="sr-only">Password</label>
+							<input type="password" id="inputPassword" name="txtPassword" class="form-control" placeholder="Password" required>
+						</td>
+					</tr>
+					-->
+					{{ form }}
+				</table>
+				<input type="submit" value="login" class="btn btn-lg btn-primary btn-block"/>
+				<input type="hidden" name="next" value="/" />							
+			</form>
+			{% endblock %}
+		</div> 
+		<!-- FOOTER -->
+		<hr>
+		<footer align="center">
+			<p>&copy; 2014 Morningstar, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</footer>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="{% static 'IssueTrackingSystem/dist/js/jquery.js' %}"></script>
+		<script src="{% static 'IssueTrackingSystem/dist/js/bootstrap.min.js' %}"></script>
+		<script>
+			
+		</script>
+	</body>
+</html>

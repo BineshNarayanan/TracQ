@@ -1,0 +1,515 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+	#padding-bottom: 40px;
+	color: #5a5a5a;
+	margin:0;
+	height:100%;
+	font-family:Calibri;
+}
+
+
+
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+	#position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	z-index: 20;
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper > .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.navbar-wrapper .navbar .container {
+  width: auto;
+}
+
+.navbar-inverse .navbar-brand {
+	color: #3FA8C9;
+}
+
+.navbar-inverse, .navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+	background-color:#2A485C;
+	border-color:#080808;
+}
+
+/*Dropdown Menu Styles*/
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {
+	color: #FFF;
+	background-color:#21384B;
+}
+
+/*On Focus Colour Changes*/
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+	color: #FFF;
+	background-color:#21384B;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	color: #7ABFF5;
+}
+
+.dropdown-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 1000;
+	display: none;
+	float: left;
+	min-width: 160px;
+	padding: 5px 0;
+	margin: 2px 0 0;
+	font-size: 14px;
+	text-align: left;
+	list-style: none;
+	background-color: #2A485C;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	border: 1px solid #CCC;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+.dropdown-menu>li>a {
+	display: block;
+	padding: 3px 20px;
+	clear: both;
+	font-weight: 400;
+	line-height: 1.42857143;
+	color: #7ABFF5;
+	white-space: nowrap;
+}
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  height: 500px;
+  margin-bottom: 60px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 500px;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 500px;
+}
+
+#separator {height:1px;background-color:gray;width:100%}
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 768px) {
+
+  /* Navbar positioning foo */
+  .navbar-wrapper {
+    margin-top: 20px;
+  }
+  .navbar-wrapper .container {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+  .navbar-wrapper .navbar {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  /* The navbar becomes detached from the top, so we round the corners */
+  .navbar-wrapper .navbar {
+    border-radius: 4px;
+  }
+
+  /* Bump up size of carousel content */
+  .carousel-caption p {
+    margin-bottom: 20px;
+    font-size: 21px;
+    line-height: 1.4;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 992px) {
+  .featurette-heading {
+    margin-top: 120px;
+  }
+}
+
+
+
+.modal-header {
+	min-height: 16.43px;
+	padding: 15px;
+	border-bottom: 1px solid #E5E5E5;
+	background-color: #2A485C;
+	color:#3FA8C9;
+}
+
+.form-control {
+	display: block;
+	width: 100%;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #FFF;
+	background-image: none;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.modal {
+	position: fixed;
+	top: 30%;
+	right: 0;
+	bottom: 0;
+	left: 20%;
+	z-index: 1050;
+	display: none;
+	overflow: hidden;
+	-webkit-overflow-scrolling: touch;
+	outline: 0;
+}
+
+.modal-content {
+	position: relative;
+	background-color: #FFF;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	border: 1px solid #999;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 6px;
+	outline: 0;
+	-webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+	width: 60%;
+}
+
+.btn-login {
+	color: #FFF;
+	background-color: #428BCA;
+	border-color: #357EBD;
+	width:100%;
+}
+
+.btn-register {
+	color: #FFF;
+	background-color: #F35C62;
+	border-color: #F35C62;
+	width:100%;
+}
+
+.btn-save {
+	color: #FFF;
+	background-color: #428BCA;
+	border-color: #357EBD;
+	width:10%;
+}
+
+.form-text-box {
+	display: block;
+	width: 30%;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #FFF;
+	background-image: none;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	float:left;
+}
+
+.form-element {
+	display: block;
+	#width: 30%;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #FFF;
+	background-image: none;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	float:left;
+}
+
+.form-textarea-box {
+	height: 60px;
+}
+
+
+
+.form-group-element {
+	margin-bottom: 15px;
+	overflow:hidden;
+	#border: 1px solid red;
+}
+
+.form-group-label {
+	float:left;
+	padding:7px 8px 0px 36px;
+	width:20%;
+	#border: 1px solid blue;
+}
+
+.logouticon {
+	position: relative;
+	top: 1px;
+	display:block;
+	font-family: 'Glyphicons Halflings';
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color:#FF8364;
+}
+
+.btn-logout {
+	border:0px solid red;
+	float:right;
+	padding: 16px 0px 0px 0px;
+}
+
+.filter-col{
+    padding-left:10px;
+    padding-right:10px;
+}
+
+
+/*Search Panel*/
+.filterable {
+    margin-top: 15px;
+}
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+    color: #333;
+}
+
+
+.positions-table {
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 20px;
+}
+positions-table {
+	background-color: rgba(0, 0, 0, 0);
+}
+positions-table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.positions-table>tbody>tr>th, .positions-table>tfoot>tr>th, .positions-table>thead>tr>td, .positions-table>tbody>tr>td, .positions-table>tfoot>tr>td {
+	padding: 8px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border-top: 1px solid #DDD;
+}
+
+.positions-table>thead>tr>th{
+	padding: 8px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border-top: 1px solid #DDD;
+	background-color:#E6D6AD;
+}
+
+.positions-table>tbody>tr>td {
+	padding: 8px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border-top: 1px solid #DDD;
+	height:50px;
+}
+
+
+.applications-table {
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 20px;
+}
+applications-table {
+	background-color: rgba(0, 0, 0, 0);
+}
+applications-table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.applications-table>tbody>tr>th, .applications-table>tfoot>tr>th, .applications-table>thead>tr>td, .applications-table>tbody>tr>td, .applications-table>tfoot>tr>td {
+	padding: 8px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border-top: 1px solid #DDD;
+}
+
+.applications-table>thead>tr>th{
+	padding: 8px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border-top: 1px solid #DDD;
+	background-color:#E6D6AD;
+}
+
+.applications-table>tbody>tr>td {
+	padding: 8px;
+	line-height: 1.42857143;
+	vertical-align: top;
+	border-top: 1px solid #DDD;
+	height:50px;
+}
+
+.form-control[readonly], fieldset[readonly] .form-control {
+/* cursor: not-allowed; */
+	background-color: #EEE;
+	opacity: 1;
+}
+
+
+#wrapper {
+	min-height:100%;
+	position:relative;
+}
+#header {
+	#padding:10px;
+	#background:#5ee;
+}
+#content {
+	#padding:10px;
+	padding-bottom:80px;   /* Height of the footer element */
+}
+#footer {
+	width:100%;
+	height:80px;
+	position:absolute;
+	bottom:0;
+	left:0;
+	#background:#ee5;
+}
+
+.progress {
+	height: 20px;
+	margin-bottom: 20px;
+	overflow: hidden;
+	background-color: #D3CFCF;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.logged-in-user {
+	margin: 0% 0% 0% 45%;
+	color: #3FA8C9;
+	float: left;
+	height: 50px;
+	padding: 11px 8px 0px 0px;
+	font-size: 18px;	
+	text-align: right;
+	width: 50%;
+	border: 0px solid #F00;
+	position: absolute;
+}
+
+.input-group[class*=custom-date] {
+	float: none;
+	padding-right: 0;
+	padding-left: 15px;
+}

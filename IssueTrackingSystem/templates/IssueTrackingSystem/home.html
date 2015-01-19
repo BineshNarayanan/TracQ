@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="{% static 'IssueTrackingSystem/images/favicon.png' %}">
+		<title>Issue Tracker</title>
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'IssueTrackingSystem/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="{% static 'IssueTrackingSystem/custom_css/carousel.css' %}" rel="stylesheet">
+		<link href="{% static 'IssueTrackingSystem/custom_css/app.css' %}" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container menucontainer">
+			<div class="col-md-6">
+				<ul class="nav nav-pills">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="/IssueTrackingSystem/openQueries">Open Queries</a></li>
+					<li><a href="/IssueTrackingSystem/resolvedQueries">Resolved Queries</a></li>
+					<li><a href="/IssueTrackingSystem/postquery">Post Query</a></li>
+				</ul>	
+			</div>
+			<div class="col-md-4" style="border:0px solid red;padding:10px;text-align:center;font-family: cursive">
+				<!--<div style="font-size:14px;position:absolute;valign:center;border:1px solid red;">Welcome, Binesh</div>	-->
+				<span style="">Welcome, {{user.first_name}}</span>	
+			</div>
+			<div class="col-md-2" style="border:0px solid red">
+				<ul class="nav nav-pills pull-right">
+					<li class="active"><a href="/IssueTrackingSystem/logout">Logout</a></li>
+				</ul>	
+			</div>
+		</div>
+		<div class="container queryform">
+			<form class="form-horizontal" role="form" method="get" action="/IssueTrackingSystem/assignResolvers">
+				<div class="col-md-12" style="border:0px solid red;margin-bottom:8px;padding:0px;">
+					<div class="col-md-10" style="border:0px solid blue;padding:2px;">
+						<span class="label label-success" style="font-size:16px;">Open Unassigned Issues</span>
+					</div>
+					<div class="col-md-1" style="border:0px solid blue;padding:0px;">
+						<button class="btn btn-info pull-right">Reset</button>
+					</div>
+					<div class="col-md-1" style="border:0px solid blue;padding:0px;">
+						<button class="btn btn-info pull-right">Save</button>
+					</div>				
+				</div>
+				
+				<div style="border:0px solid red;clear:both">
+					{% if listIssues %}
+					<table class="table table-bordered" style="margin-bottom:10px;">
+						<thead>
+							<tr style="background-color:#428bca;color:white;">
+								<th style="text-align:center;">
+									<input type="checkbox" value="">
+								</th>
+								<th style="text-align:center">Id</th>
+								<th style="text-align:center">Title</th>
+								<th style="text-align:center">Type</th>
+								<th style="text-align:center">Posted By</th>
+								<th style="text-align:center">Posted On</th>
+								<th style="text-align:center">Assign To</th>
+							</tr>
+						</thead>
+						{% for Issue in listIssues %}
+						<tr>
+							<td style="text-align:center;">
+								<input type="checkbox" class="classCheckBoxAssignQuery" name="nameCheckQuery_{{Issue.Id}}" id="idCheckQuery_{{Issue.Id}}" value="{{Issue.Id}}"></input>
+							</td>
+							<td style="text-align:center">
+								{{Issue.Id}}
+							</td>
+							<td>
+								{{Issue.IssueTitle}}
+							</td>
+							<td>
+								{{Issue.IssueTypeCode}}
+							</td>
+							<td style="text-align:center">
+								{{Issue.UserId}}
+							</td>
+							<td style="text-align:center">
+								{{Issue.IssueRaisedOn}}
+							</td>
+							<td style="text-align:center">
+								<select id="assignee_{{Issue.Id}}" name="selectAssignee_{{Issue.Id}}" style="width:100%;">
+									<option value="">Select</option>
+									{% if listAdminUsers %}
+										{% for Users in listAdminUsers %}
+											<option value="{{Users.Id}}">{{Users}}</option>
+										{% endfor %}
+									{% endif %}
+								</select>
+							</td>
+						</tr>
+						{% endfor %}
+					</table>	
+					{% else %}
+						<p>No Issues are available.</p>
+					{% endif %}
+					<input type="hidden" name="selectedIssues" id="hdnSelectedIssues" value=""></input>
+				</div>
+				<div class="col-md-12" style="border:0px solid red;margin-top:2px;margin-bottom:8px;padding:0px;">
+					<div class="col-md-10" style="border:0px solid blue;padding:0px;">
+						&nbsp;
+					</div>
+					<div class="col-md-1" style="border:0px solid blue;padding:0px;">
+						<button class="btn btn-info pull-right">Reset</button>
+					</div>
+					<div class="col-md-1" style="border:0px solid blue;padding:0px;">
+						<button type="submit" id="saveIssuesToBeAssigned" class="btn btn-info pull-right button-save">Save</button>
+					</div>				
+				</div>
+			</form>
+		</div>
+		<!-- FOOTER -->
+		<hr>
+		<div class="footer">
+			<p>&copy; 2014 Morningstar, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</div>
+		
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="{% static 'IssueTrackingSystem/dist/js/jquery.js' %}"></script>
+		<script src="{% static 'IssueTrackingSystem/dist/js/bootstrap.min.js' %}"></script>
+		<script>
+			$(document).ready(function(){
+				//$(".classCheckBoxAssignQuery").live("click", function(){
+				var selectedIssues = new Array();
+				$(".classCheckBoxAssignQuery").click(function(){
+					var checkBoxId = $(this).attr("id");
+					var issueId = $(this).attr("value");
+					if($(this).prop("checked")){
+						if(validate(checkBoxId,issueId)){
+							addToSelectedIssuesList(checkBoxId,issueId);
+						}
+					} else {
+						removeFromSelectedIssuesList(checkBoxId,issueId);
+						assignToHiddenVariable();
+					};
+				});
+				
+				function validate(checkBoxId,issueId){
+					var validationSuccess = true;
+					(validationSuccess == true) ? validationSuccess = validateCheckAssignee(checkBoxId,issueId) : validationSuccess = false;
+					return validationSuccess;
+				}
+				
+				function validateCheckAssignee(checkBoxId,issueId){
+					if($("#assignee_"+issueId).val() == ""){
+						alert('Please choose a Assign To!!');
+						removeFromSelectedIssuesList(checkBoxId,issueId);
+						assignToHiddenVariable();
+						$("#"+checkBoxId).prop('checked',false);
+						return false;
+					} 
+					return true;
+				}
+				
+				function addToSelectedIssuesList(checkBoxId,issueId){
+					selectedIssues[checkBoxId] = issueId + ":" +$("#assignee_"+issueId).val();
+					if($("#hdnSelectedIssues").val() != "") {
+						$("#hdnSelectedIssues").val($("#hdnSelectedIssues").val()+',' + issueId + ":" +$("#assignee_"+issueId).val());
+					} else {
+						$("#hdnSelectedIssues").val(issueId + ":" +$("#assignee_"+issueId).val());
+					}
+					
+				};
+				
+				function removeFromSelectedIssuesList(checkBoxId,issueId){
+					delete selectedIssues[checkBoxId];
+				};
+				
+				function assignToHiddenVariable(){
+					selectedIssues.length > 0 ? builtString = selectedIssues[0] : builtString = "";
+					for(i = 1; i < selectedIssues.length ; i++){
+						builtString = builtString + "," + selectedIssues[i];
+					}
+					$("#hdnSelectedIssues").val(builtString);
+				}
+				
+				$(".button-save").click(function(){
+					var buttonId = $(this).attr("id");
+				});
+				
+			});
+			
+		</script>
+	</body>
+</html>

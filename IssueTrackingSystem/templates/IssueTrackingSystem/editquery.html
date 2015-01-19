@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="{% static 'IssueTrackingSystem/images/favicon.png' %}">
+		<title>Issue Tracker</title>
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'IssueTrackingSystem/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="{% static 'IssueTrackingSystem/custom_css/carousel.css' %}" rel="stylesheet">
+		<link href="{% static 'IssueTrackingSystem/custom_css/app.css' %}" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container menucontainer">
+			<div class="col-md-6">
+				<ul class="nav nav-pills">
+					<li><a href="/IssueTrackingSystem/home">Home</a></li>
+					<li><a href="/IssueTrackingSystem/openQueries">Open Queries</a></li>
+					<li><a href="/IssueTrackingSystem/resolvedQueries">Resolved Queries</a></li>
+					<li><a href="/IssueTrackingSystem/postquery">Post Query</a></li>
+					<li class="active"><a href="#">Edit Query</a></li>
+				</ul>	
+			</div>
+			<div class="col-md-4" style="border:0px solid red;padding:10px;text-align:center;font-family: cursive">
+				<!--<div style="font-size:14px;position:absolute;valign:center;border:1px solid red;">Welcome, Binesh</div>	-->
+				<span style="">Welcome, {{user.first_name}}</span>	
+			</div>
+			<div class="col-md-2" style="border:0px solid red">
+				<ul class="nav nav-pills pull-right">
+					<li class="active"><a href="/IssueTrackingSystem/logout">Logout</a></li>
+				</ul>	
+			</div>
+		</div>
+		<div class="container queryform">
+			<form class="form-horizontal" role="form" method="get" action="/IssueTrackingSystem/editIssue">
+				<div class="row" style="border:0px solid red;">
+					<div class="col-md-10 col-md-offset-1">
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="issueDate">Date</label>
+							<input type="hidden" name="issueId" value="{{issue.Id}}"></input>
+							<div class="col-sm-4">
+								<input type="text" id="issueDate" placeholder="Date" class="form-control" readonly value="{{issue.IssueRaisedOn}}"></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="issueTitle">Title</label>
+							<div class="col-sm-5">
+								<input type="text" id="issueTitle" placeholder="Title" class="form-control" value="{{issue.IssueTitle}}" readonly></input>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="issueDescription">Description</label>
+							<div class="col-sm-5">
+								<textarea rows="9" name="txtIssueDescription" id="issueDescription" placeholder="Description" class="form-control" readonly>{{issue.IssueDescription}}</textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="type">Type</label>
+							<div class="col-sm-6">
+								<select id="type" name="txtIssueType" class="form-text-box" required>
+									{% if issueTypes %}
+										{% for issueType in issueTypes %}
+											{%ifequal issueType.IssueTypeCode issue.IssueTypeCode.IssueTypeCode%}
+												<option value="{{issueType.IssueTypeCode}}" selected>{{issueType.IssueTypeName}}</option>
+											{% else %}
+												<option value="{{issueType.IssueTypeCode}}">{{issueType.IssueTypeName}}</option>
+											{%endifequal%}
+										{% endfor %}
+									{% endif %}
+								</select>
+							</div>
+						</div>
+						<!--
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="attachment">Attachment(max. 1MB)</label>
+							<div class="col-sm-5">
+								<input type="file" id="attachment" class="form-control filestyle" data-input="false">
+							</div>
+						</div>
+						-->
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="txtComment">Comments</label>
+							<div class="col-sm-5">
+								<textarea rows="9" name="nameTxtComment" id="txtComment" placeholder="Comments" class="form-control" required></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="type">Assign To</label>
+							<div class="col-sm-6">
+								<select name = "assignTo" id="issueAssignTo" class="form-text-box" required>
+									<option value="">Select</option>
+									<option value="{{issue.UserId.Id}}">{{issue.UserId}}</option>
+									{% if listAdminUsers %}
+										{% for Users in listAdminUsers %}
+											<option value="{{Users.Id}}">{{Users}}</option>
+										{% endfor %}
+									{% endif %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="resolveQuery">Resolve?</label>
+							<div class="col-sm-2">
+								<input type="checkbox" class="classCheckBoxResolveQuery" name="resolveQuery" id="idResolveQuery"></input>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8" style="text-align:right">
+						<div class="form-group">
+							<button type="reset" class="btn btn-default">Cancel</button>
+							<button type="submit" id="saveEditQuery" class="btn btn-primary button-save">Save</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		{% if commentHistory %}
+		<div class="container queryform">
+			
+			<table class="table table-bordered" style="margin-bottom:10px;">
+				<thead>
+					<tr style="background-color:#428bca;color:white">
+						<th style="text-align:center">No.</th>
+						<th style="text-align:center">Comment</th>
+						<th style="text-align:center">Comment By</th>
+						<th style="text-align:center">Commented On</th>
+					</tr>
+				</thead>
+				{% for serialNo, comment in commentHistory%}
+				<tr>
+					<td>
+						{{serialNo}}
+					</td>
+					<td>
+						{{comment.Comment}}
+					</td>
+					<td>
+						{{comment.CommentBy}}
+					</td>
+					<td>
+						{{comment.CommentedOn}}
+					</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+		{% endif %}
+		<!-- FOOTER -->
+		<hr>
+		<div class="footer">
+			<p>&copy; 2014 Morningstar, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</div>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="{% static 'IssueTrackingSystem/dist/js/jquery.js' %}"></script>
+		<script src="{% static 'IssueTrackingSystem/dist/js/bootstrap.min.js' %}"></script>
+		<script>
+			$(".classCheckBoxResolveQuery").click(function(){
+				if($(this).prop("checked")){
+					$('#issueAssignTo').prop('selectedIndex', 1);
+				} else {
+					$('#issueAssignTo').prop('selectedIndex', 0);
+				}
+				
+			});
+			
+			$(".button-save").click(function(){
+				var buttonId = $(this).attr("id");
+			});
+		</script>
+	</body>
+</html>
