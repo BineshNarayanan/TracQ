@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 	url(r'^editQuery', views.editQuery, name='editQuery'),
 	url(r'^editIssue', views.editIssue, name='saveEditedIssue'),
 	url(r'^viewquery', views.viewquery, name='viewQuery'),
+	url(r'^dashboard', views.viewDashboard, name='dashboard'),
 )
 
 '''

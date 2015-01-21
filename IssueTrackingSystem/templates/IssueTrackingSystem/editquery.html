@@ -19,7 +19,10 @@
 		<div class="container menucontainer">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
-					<li><a href="/IssueTrackingSystem/home">Home</a></li>
+					<li><a href="/IssueTrackingSystem/dashboard">Dashboard</a></li>
+					{% if 'ADM' == request.session.LOGGED_IN_USER_ROLE %}
+						<li><a href="/IssueTrackingSystem/home">Home</a></li>
+					{%endif%}
 					<li><a href="/IssueTrackingSystem/openQueries">Open Queries</a></li>
 					<li><a href="/IssueTrackingSystem/resolvedQueries">Resolved Queries</a></li>
 					<li><a href="/IssueTrackingSystem/postquery">Post Query</a></li>

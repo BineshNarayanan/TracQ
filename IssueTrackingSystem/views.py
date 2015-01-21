@@ -47,7 +47,10 @@ def login_user(request):
 			loggedInUser = Users.objects.get(LoginId=user.username)
 			request.session['LOGGED_IN_USER_ROLE'] = loggedInUser.RoleMasterCode.RoleMasterCode
 			request.session['LOGGED_IN_USER_ID'] = loggedInUser.Id
-			return HttpResponseRedirect('/IssueTrackingSystem/home')
+			if loggedInUser.RoleMasterCode.RoleMasterCode == 'ADM':
+				return HttpResponseRedirect('/IssueTrackingSystem/dashboard')
+			else:
+				return HttpResponseRedirect('/IssueTrackingSystem/dashboard')
 		else:
 			print("The password is valid, but the account has been disabled!")
 			return index(request)
@@ -164,6 +167,8 @@ def openQueries(request):
 	elif LOGGED_IN_USER_ROLE == 'RES':
 		listIssues = Issue.objects.filter(IsIssueOpen=True,IssueAssignedTo=loggedInUser)
 		listIssuesPostedBySelf = Issue.objects.filter(IsIssueOpen=True,UserId=loggedInUser)
+	else:
+		listIssues = Issue.objects.filter(IsIssueOpen=True,UserId=loggedInUser)
 	#loggedInUser = Users.objects.get(Id=1)
 	#listIssues = Issue.objects.filter(IssueAssignedTo=loggedInUser,IsIssueOpen=True)
 	#listIssues = Issue.objects.select_related('Users').filter(IssueAssignedTo__gt=0)
@@ -198,7 +203,7 @@ def postIssue(request):
 		issue.save();
 		issueAssigneeHistory = IssueAssigneeHistory(IssueId=issue,IssueAssignedTo=userAssignedTo,IssueAssignedBy=loggedInUser,IssueAssignedOn=datetime.datetime.now())
 		issueAssigneeHistory.save()
-	sendemail()
+		sendemail(issue)
 	return openQueries(request)
 
 
@@ -285,9 +290,35 @@ def viewquery(request):
 	})
 	return HttpResponse(template.render(context))
 	
-def sendemail():
-	subject = "Acknowledgement"
+def sendemail(issue):
+	subject = "Acknowledgement for Query No. " + str(issue)
 	message = "Hello,\n\nThanks for your mail.\n\nWe will revert to you within 48 hours.\n\nRegards,\nHR Team."
 	disclaimer = "\n\nDISCLAIMER : This is an auto-generated mail. Please do not reply to this mail."
 				
-	send_mail('Acknowledgment', message+disclaimer, 'HRTeam@morningstar.com',['binesh.narayanan@morningstar.com','swati.shettigar@morningstar.com'], fail_silently=False)
+	send_mail(subject, message+disclaimer, 'HRTeam@morningstar.com',['binesh.narayanan@morningstar.com','swati.shettigar@morningstar.com'], fail_silently=False)
+
+def viewDashboard(request):
+	template = loader.get_template('IssueTrackingSystem/dashboard.html')
+	LOGGED_IN_USER_ROLE = request.session['LOGGED_IN_USER_ROLE']
+	loggedInUser = Users.objects.get(LoginId=request.user.username)
+	unAssignedUser = Users.objects.get(RoleMasterCode='UA')
+	listOpenIssues = []
+	listUnassignedIssues = []
+	listResolvedIssues = []
+	if LOGGED_IN_USER_ROLE == 'ADM':
+		listUnassignedIssues = Issue.objects.filter(IssueAssignedTo=unAssignedUser,IsIssueOpen=True)
+		listResolvedIssues = Issue.objects.filter(IsIssueOpen=False)
+		listOpenIssues = Issue.objects.filter(IsIssueOpen=True)
+	elif LOGGED_IN_USER_ROLE == 'RES':
+		listUnassignedIssues = Issue.objects.filter(IssueAssignedTo=unAssignedUser,IsIssueOpen=True)
+		listResolvedIssues = Issue.objects.filter(IsIssueOpen=False,IssueResolvedBy=loggedInUser)
+		listOpenIssues = Issue.objects.filter(IssueAssignedTo=loggedInUser,IsIssueOpen=True)
+	else:
+		listResolvedIssues = Issue.objects.filter(UserId=loggedInUser,IsIssueOpen=False)
+		listOpenIssues = Issue.objects.filter(UserId=loggedInUser,IsIssueOpen=True)
+	context = RequestContext(request, {
+        'listOpenIssues': len(listOpenIssues),
+		'listUnassignedIssues':len(listUnassignedIssues),
+		'listResolvedIssues':len(listResolvedIssues),
+    })
+	return HttpResponse(template.render(context))

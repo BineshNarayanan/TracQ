@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<link rel="icon" href="{% static 'IssueTrackingSystem/images/favicon.png' %}">
+		<title>Issue Tracker</title>
+		<!-- Bootstrap core CSS -->
+		<link href="{% static 'IssueTrackingSystem/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+		<!-- Custom styles for this template -->
+		<link href="{% static 'IssueTrackingSystem/custom_css/carousel.css' %}" rel="stylesheet">
+		<link href="{% static 'IssueTrackingSystem/custom_css/app.css' %}" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container menucontainer">
+			<div class="col-md-6">
+				<ul class="nav nav-pills">
+					<li class="active"><a href="#">Dashboard</a></li>
+					{% if 'ADM' == request.session.LOGGED_IN_USER_ROLE %}
+						<li><a href="/IssueTrackingSystem/home">Home</a></li>
+					{% endif %}
+					<li><a href="/IssueTrackingSystem/openQueries">Open Queries</a></li>
+					<li><a href="/IssueTrackingSystem/resolvedQueries">Resolved Queries</a></li>
+					<li><a href="/IssueTrackingSystem/postquery">Post Query</a></li>
+				</ul>	
+			</div>
+			<div class="col-md-4" style="border:0px solid red;padding:10px;text-align:center;font-family: cursive">
+				<!--<div style="font-size:14px;position:absolute;valign:center;border:1px solid red;">Welcome, Binesh</div>	-->
+				<span style="">Welcome, {{user.first_name}}</span>	
+			</div>
+			<div class="col-md-2" style="border:0px solid red">
+				<ul class="nav nav-pills pull-right">
+					<li class="active"><a href="/IssueTrackingSystem/logout">Logout</a></li>
+				</ul>	
+			</div>
+		</div>
+		<div class="container queryform">
+			<div id="canvas-holder" style="text-align:center">
+				<canvas id="chart-area" width="300" height="300"/>
+			</div>
+		</div>
+		<!-- FOOTER -->
+		<hr>
+		<div class="footer" style="position:absolute">
+			<p>&copy; 2014 Morningstar, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+		</div>
+		
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="{% static 'IssueTrackingSystem/dist/js/jquery.js' %}"></script>
+		<script src="{% static 'IssueTrackingSystem/dist/js/bootstrap.min.js' %}"></script>
+		<script src="{% static 'IssueTrackingSystem/chartjs/Chart.js' %}"></script>
+		<script>
+			$(document).ready(function(){
+				var pieData = [
+				{
+					value: {{listOpenIssues}},
+					color:"#F7464A",
+					highlight: "#FF5A5E",
+					label: "Open Issues"
+				},
+				{
+					value: {{listResolvedIssues}},
+					color: "#46BFBD",
+					highlight: "#5AD3D1",
+					label: "Resolved Issues"
+				},
+				{
+					value: {{listUnassignedIssues}},
+					color: "#FDB45C",
+					highlight: "#FFC870",
+					label: "Unassigned Issues"
+				},
+			];
+
+			window.onload = function(){
+				var ctx = document.getElementById("chart-area").getContext("2d");
+				window.myPie = new Chart(ctx).Pie(pieData);
+			};
+				
+			});
+			
+		</script>
+	</body>
+</html>

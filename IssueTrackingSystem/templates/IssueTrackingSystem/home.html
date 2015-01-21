@@ -19,7 +19,10 @@
 		<div class="container menucontainer">
 			<div class="col-md-6">
 				<ul class="nav nav-pills">
-					<li class="active"><a href="#">Home</a></li>
+					<li><a href="/IssueTrackingSystem/dashboard">Dashboard</a></li>
+					{% if 'ADM' == request.session.LOGGED_IN_USER_ROLE %}
+						<li class="active"><a href="#">Home</a></li>
+					{% endif %}
 					<li><a href="/IssueTrackingSystem/openQueries">Open Queries</a></li>
 					<li><a href="/IssueTrackingSystem/resolvedQueries">Resolved Queries</a></li>
 					<li><a href="/IssueTrackingSystem/postquery">Post Query</a></li>
@@ -135,10 +138,15 @@
 					var checkBoxId = $(this).attr("id");
 					var issueId = $(this).attr("value");
 					if($(this).prop("checked")){
+						// This adds required at runtime. Can be added to remove the validation alerts.
+						//$('#assignee_'+issueId).attr('required',true)
+						//alert($('#assignee_'+issueId).attr('required'))
 						if(validate(checkBoxId,issueId)){
 							addToSelectedIssuesList(checkBoxId,issueId);
 						}
 					} else {
+						//$('#assignee_'+issueId).attr('required',false)
+						//alert($('#assignee_'+issueId).attr('required'))
 						removeFromSelectedIssuesList(checkBoxId,issueId);
 						assignToHiddenVariable();
 					};
