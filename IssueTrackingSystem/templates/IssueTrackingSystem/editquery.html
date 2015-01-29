@@ -40,7 +40,8 @@
 			</div>
 		</div>
 		<div class="container queryform">
-			<form class="form-horizontal" role="form" method="get" action="/IssueTrackingSystem/editIssue">
+			<form class="form-horizontal" role="form" method="post" action="/IssueTrackingSystem/editIssue" enctype="multipart/form-data">
+				{% csrf_token %}
 				<div class="row" style="border:0px solid red;">
 					<div class="col-md-10 col-md-offset-1">
 						<div class="form-group">
@@ -78,14 +79,17 @@
 								</select>
 							</div>
 						</div>
-						<!--
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="attachment">Attachment(max. 1MB)</label>
 							<div class="col-sm-5">
-								<input type="file" id="attachment" class="form-control filestyle" data-input="false">
+								<input type="file" name="file" id="attachment" class="form-control filestyle" data-input="false">
+								{% if issueAttachmentLogLength > 0 %}
+									{% for serialNo, attachment in issueAttachmentLog%}
+										<a href="#">{{attachment.AttachmentName}}</a><br>
+									{% endfor%}
+								{% endif%}
 							</div>
 						</div>
-						-->
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="txtComment">Comments</label>
 							<div class="col-sm-5">
@@ -125,7 +129,7 @@
 			</form>
 		</div>
 		
-		{% if commentHistory %}
+		{% if commentHistoryLength > 0 %}
 		<div class="container queryform">
 			
 			<table class="table table-bordered" style="margin-bottom:10px;">

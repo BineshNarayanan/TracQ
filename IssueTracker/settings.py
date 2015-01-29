@@ -102,3 +102,5 @@ STATIC_URL = '/static/'
 
 
 EMAIL_HOST = '172.28.6.19'
+
+FILESAVE_PATH = 'D:/Binesh/MyPythonProjects/IssueTracker/IssueTrackingSystem/files/'

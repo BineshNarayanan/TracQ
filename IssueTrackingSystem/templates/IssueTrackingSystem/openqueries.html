@@ -73,13 +73,12 @@
 					</thead>
 					{% for Issue in listIssues %}
 					<tr>
-						<!--
-						<td style="text-align:center;">
-							<input type="checkbox" id="checkQuery" value="{{Issue.Id}}">
-						</td>
-						-->
 						<td style="text-align:center">
-							<a href="/IssueTrackingSystem/editQuery?issueId={{Issue.Id}}">{{Issue.Id}}</a>
+							{%if 'ADM' == request.session.LOGGED_IN_USER_ROLE or 'RES' == request.session.LOGGED_IN_USER_ROLE%}
+								<a href="/IssueTrackingSystem/editQuery?issueId={{Issue.Id}}">{{Issue.Id}}</a>
+							{%else%}
+								<a href="/IssueTrackingSystem/viewquery?issueId={{Issue.Id}}">{{Issue.Id}}</a>
+							{%endif%}
 						</td>
 						<td>
 							{{Issue.IssueTitle}}

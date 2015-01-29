@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate,logout,login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
-from IssueTrackingSystem.models import Issue, Users, IssueTypeMaster, RoleMaster, IssueAssigneeHistory, IssueCommentLog
+from IssueTrackingSystem.models import Issue, Users, IssueTypeMaster, RoleMaster, IssueAssigneeHistory, IssueCommentLog, IssueAttachmentLog
+from IssueTracker.settings import FILESAVE_PATH
 
 import datetime
 #import smtplib
@@ -191,9 +192,9 @@ def postQueryPage(request):
 	
 def postIssue(request):
 	template = loader.get_template('IssueTrackingSystem/openQueries.html')
-	issueTitle = request.GET.get('txtIssueTitle');
-	issueDescription = request.GET.get('txtIssueDescription');
-	issueType = request.GET.get('txtIssueType');
+	issueTitle = request.POST.get('txtIssueTitle');
+	issueDescription = request.POST.get('txtIssueDescription');
+	issueType = request.POST.get('txtIssueType');
 	#loggedInUser = Users.objects.get(Id=1)
 	loggedInUser = Users.objects.get(LoginId=request.user.username)
 	userAssignedTo = Users.objects.get(RoleMasterCode='UA')
@@ -203,6 +204,15 @@ def postIssue(request):
 		issue.save();
 		issueAssigneeHistory = IssueAssigneeHistory(IssueId=issue,IssueAssignedTo=userAssignedTo,IssueAssignedBy=loggedInUser,IssueAssignedOn=datetime.datetime.now())
 		issueAssigneeHistory.save()
+		if request.POST.get('file') != '':
+			uploadedFile = request.FILES['file']
+			fileName = uploadedFile.name
+			issueId = issue.Id
+			timestamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")
+			finalFileNameSaved = timestamp + '_' + str(issueId) + '_' + fileName
+			issueAttachmentLog = IssueAttachmentLog(IssueId=issue,AttachmentName=fileName,AttachmentLocation=finalFileNameSaved,UploadedOn=datetime.datetime.now(),UploadedBy=loggedInUser)
+			issueAttachmentLog.save()
+			saveFile(request,finalFileNameSaved)
 		sendemail(issue)
 	return openQueries(request)
 
@@ -239,21 +249,25 @@ def editQuery(request):
 	listAdminUsers = list(Users.objects.filter(RoleMasterCode='ADM'))
 	listResolvers = list(Users.objects.filter(RoleMasterCode='RES'))
 	commentHistory = IssueCommentLog.objects.filter(IssueId=issue)
+	issueAttachmentLog = IssueAttachmentLog.objects.filter(IssueId=issue)
 	context = RequestContext(request, {
 		'issue':issue,
 		'issueTypes': issueTypes,
 		'listAdminUsers':listAdminUsers + listResolvers,
-		'commentHistory':enumerate(commentHistory,start=1)
+		'commentHistoryLength' : len(commentHistory),
+		'commentHistory':enumerate(commentHistory,start=1),
+		'issueAttachmentLogLength':len(issueAttachmentLog),
+		'issueAttachmentLog':enumerate(issueAttachmentLog,start=1)
 	})
 	return HttpResponse(template.render(context))
 
 @login_required(login_url='/IssueTrackingSystem')
 def editIssue(request):
 	#template = loader.get_template('IssueTrackingSystem/openqueries.html')
-	issueId = request.GET.get('issueId')
-	assignTo = request.GET.get('assignTo')
-	resolveQuery = request.GET.get('resolveQuery')
-	comment = request.GET.get('nameTxtComment')
+	issueId = request.POST.get('issueId')
+	assignTo = request.POST.get('assignTo')
+	resolveQuery = request.POST.get('resolveQuery')
+	comment = request.POST.get('nameTxtComment')
 	issue = Issue.objects.get(Id=issueId)
 	if resolveQuery == 'on':
 		issue.IsIssueOpen = False
@@ -269,6 +283,15 @@ def editIssue(request):
 		issueAssigneeHistory.save()
 		comments = IssueCommentLog(IssueId=issue,Comment=comment,CommentBy=loggedInUser,CommentedOn=datetime.datetime.now())
 		comments.save()
+		if request.POST.get('file') != '':
+			uploadedFile = request.FILES['file']
+			fileName = uploadedFile.name
+			issueId = issue.Id
+			timestamp = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")
+			finalFileNameSaved = timestamp + '_' + str(issueId) + '_' + fileName
+			issueAttachmentLog = IssueAttachmentLog(IssueId=issue,AttachmentName=fileName,AttachmentLocation=finalFileNameSaved,UploadedOn=datetime.datetime.now(),UploadedBy=loggedInUser)
+			issueAttachmentLog.save()
+			saveFile(request,finalFileNameSaved)
 	#listIssues = Issue.objects.filter(IssueAssignedTo__gt=0)
 	#context = RequestContext(request, {
 	#	'listIssues': listIssues
@@ -282,11 +305,15 @@ def viewquery(request):
 	issue = Issue.objects.get(Id=issueId)
 	issueTypes = IssueTypeMaster.objects.all()
 	commentHistory = IssueCommentLog.objects.filter(IssueId=issue)
+	issueAttachmentLog = IssueAttachmentLog.objects.filter(IssueId=issue)
 	print commentHistory
 	context = RequestContext(request, {
 		'issue': issue,
 		'issueTypes': issueTypes,
-		'commentHistory':enumerate(commentHistory,start=1)
+		'commentHistoryLength' : len(commentHistory),
+		'commentHistory':enumerate(commentHistory,start=1),
+		'issueAttachmentLogLength':len(issueAttachmentLog),
+		'issueAttachmentLog':enumerate(issueAttachmentLog,start=1)
 	})
 	return HttpResponse(template.render(context))
 	
@@ -322,3 +349,18 @@ def viewDashboard(request):
 		'listResolvedIssues':len(listResolvedIssues),
     })
 	return HttpResponse(template.render(context))
+
+	
+def postFile(request):
+	template = loader.get_template('IssueTrackingSystem/postfile.html')
+	context = RequestContext(request, {})
+	return HttpResponse(template.render(context))
+
+def saveFile(request,finalFileNameSaved):
+	template = loader.get_template('IssueTrackingSystem/postfile.html')
+	uploadedFile = request.FILES['file']
+	with open(FILESAVE_PATH+finalFileNameSaved, 'wb+') as destination:
+		for chunk in uploadedFile.chunks():
+			destination.write(chunk)
+	context = RequestContext(request, {})
+	return postFile(request)

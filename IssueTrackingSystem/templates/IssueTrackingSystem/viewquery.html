@@ -76,14 +76,16 @@
 								</select>
 							</div>
 						</div>
-						<!--
+						{% if issueAttachmentLogLength > 0 %}
 						<div class="form-group">
-							<label class="col-sm-3 control-label" for="attachment">Attachment(max. 1MB)</label>
+							<label class="col-sm-3 control-label" for="attachment">Attachment</label>
 							<div class="col-sm-5">
-								<input type="file" id="attachment" class="form-control filestyle" data-input="false" readonly>
+								{% for serialNo, attachment in issueAttachmentLog%}
+									<a href="#">attachment</a><br>
+								{% endfor%}
 							</div>
 						</div>
-						-->
+						{% endif%}
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="txtComment">Comments</label>
 							<div class="col-sm-5">
@@ -93,7 +95,11 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="resolveQuery">Resolve?</label>
 							<div class="col-sm-2">
-								<input type="checkbox" class="classCheckBoxResolveQuery" name="resolveQuery" id="idResolveQuery" disabled checked></input>
+								{% if issue.IsIssueOpen == False %}
+									<input type="checkbox" class="classCheckBoxResolveQuery" name="resolveQuery" id="idResolveQuery" disabled checked></input>
+								{% else %}
+									<input type="checkbox" class="classCheckBoxResolveQuery" name="resolveQuery" id="idResolveQuery" disabled></input>
+								{% endif%}
 							</div>
 						</div>
 					</div>
@@ -101,43 +107,36 @@
 			</form>
 		</div>
 		
-		
+		{% if commentHistoryLength > 0 %}
 		<div class="container queryform">
-			{% if commentHistory %}
-				<table class="table table-bordered" style="margin-bottom:10px;">
-					<thead>
-						<tr style="background-color:#428bca;color:white">
-							<th style="text-align:center">No.</th>
-							<th style="text-align:center">Comment</th>
-							<th style="text-align:center">Comment By</th>
-							<th style="text-align:center">Commented On</th>
-						</tr>
-					</thead>
-					{% for serialNo, comment in commentHistory%}
-					<tr>
-						<td>
-							{{serialNo}}
-						</td>
-						<td>
-							{{comment.Comment}}
-						</td>
-						<td>
-							{{comment.CommentBy}}
-						</td>
-						<td>
-							{{comment.CommentedOn}}
-						</td>
+			<table class="table table-bordered" style="margin-bottom:10px;">
+				<thead>
+					<tr style="background-color:#428bca;color:white">
+						<th style="text-align:center">No.</th>
+						<th style="text-align:center">Comment</th>
+						<th style="text-align:center">Comment By</th>
+						<th style="text-align:center">Commented On</th>
 					</tr>
-					{% endfor %}
-				</table>
-			{% else %}
-				<table class="table table-bordered" style="margin-bottom:10px;">
-					<tr>
-						<td align="center" style="background:lightblue">No Comments</td>
-					<tr>
-				</table>
-			{% endif %}
+				</thead>
+				{% for serialNo, comment in commentHistory%}
+				<tr>
+					<td>
+						{{serialNo}}
+					</td>
+					<td>
+						{{comment.Comment}}
+					</td>
+					<td>
+						{{comment.CommentBy}}
+					</td>
+					<td>
+						{{comment.CommentedOn}}
+					</td>
+				</tr>
+				{% endfor %}
+			</table>
 		</div>
+		{% endif %}
 		
 		<!-- FOOTER -->
 		<hr>

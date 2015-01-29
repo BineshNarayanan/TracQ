@@ -136,3 +136,23 @@ class IssueCommentLog(models.Model):
 	CommentedOn = models.DateTimeField('Issue Assigned On',default=datetime.datetime.now(),blank=True)
 	def __unicode__(self):
 		return unicode(self.Id)
+
+'''
+CREATE TABLE IssueAttachmentLog (
+  Id REAL NOT NULL AUTO_INCREMENT,
+  IssueId REAL NULL,
+  IssueCommentId REAL NULL,
+  Attachment BLOB NULL,
+  PRIMARY KEY(Id)
+);
+'''
+
+class IssueAttachmentLog(models.Model):
+	Id = models.AutoField(primary_key=True)
+	IssueId = models.ForeignKey(Issue,related_name='AttachmentIssueId')
+	AttachmentName = models.TextField(max_length=2000)
+	AttachmentLocation = models.TextField(max_length=2000)
+	UploadedOn = models.DateTimeField('File Uploaded On',default=datetime.datetime.now(),blank=True)
+	UploadedBy = models.ForeignKey(Users,related_name='FileUploadedBy')
+	def __unicode__(self):
+		return unicode(self.Id)

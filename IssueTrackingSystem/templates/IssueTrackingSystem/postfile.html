@@ -39,41 +39,10 @@
 			</div>
 		</div>
 		<div class="container queryform">
-			<form class="form-horizontal" role="form" method="post" action="/IssueTrackingSystem/postIssue" enctype="multipart/form-data">
+			<form class="form-horizontal" role="form" method="post" action="/IssueTrackingSystem/saveFile" enctype="multipart/form-data">
 				{% csrf_token %}
 				<div class="row" style="border:0px solid red;">
 					<div class="col-md-10 col-md-offset-1">
-						<div class="form-group">
-							<label class="col-sm-3 control-label" for="issueDate">Date</label>
-							<div class="col-sm-4">
-								<input type="text" id="issueDate" placeholder="Date" class="form-control" value="{{issueDate|date:"SHORT_DATETIME_FORMAT"}}" readonly></input>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label" for="issueTitle">Title</label>
-							<div class="col-sm-5">
-								<input type="text" name="txtIssueTitle" id="issueTitle" placeholder="Title" class="form-control" required autofocus>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label" for="issueDescription">Description</label>
-							<div class="col-sm-5">
-								<textarea rows="9" name="txtIssueDescription" id="issueDescription" placeholder="Description" class="form-control" required></textarea>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label" for="type">Type</label>
-							<div class="col-sm-6">
-								<select id="type" name="txtIssueType" class="form-text-box" required>
-									<option value="">Select</option>
-									{% if issueTypes %}
-										{% for IssueTypeMaster in issueTypes %}
-											<option value="{{IssueTypeMaster.IssueTypeCode}}">{{IssueTypeMaster.IssueTypeName}}</option>
-										{% endfor %}
-									{% endif %}
-								</select>
-							</div>
-						</div>
 						<div class="form-group">
 							<label class="col-sm-3 control-label" for="attachment">Attachment(max. 1MB)</label>
 							<div class="col-sm-5">
